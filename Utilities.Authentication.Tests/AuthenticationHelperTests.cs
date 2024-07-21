@@ -5,6 +5,13 @@ namespace Utilities.Authentication.Tests
 		[Fact]
 		public void Test1()
 		{
+			//Arrange
+
+
+			//Act
+
+
+			//Assert
 			Assert.True(true);
 		}
 	}

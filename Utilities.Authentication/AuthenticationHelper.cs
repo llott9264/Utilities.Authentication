@@ -1,4 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
+using Utilities.Authentication.Interfaces;
+using Utilities.Authentication.Wrappers;
 
 namespace Utilities.Authentication
 {
@@ -8,16 +10,10 @@ namespace Utilities.Authentication
 		{
 			bool isUserInGroup = false;
 
-			using (PrincipalContext principalContext = new(ContextType.Domain, domainName))
-			{
-				using (GroupPrincipal groupPrincipal = GroupPrincipal.FindByIdentity(principalContext, groupName))
-				{
-					using (UserPrincipal? userPrincipal = UserPrincipal.FindByIdentity(principalContext, userName.ToLower()))
-					{
-						isUserInGroup = userPrincipal != null && userPrincipal.IsMemberOf(groupPrincipal);
-					}
-				}
-			}
+			IPrincipalContextWrapper principalContextWrapper = PrincipalContextWrapper.GetPrincipalContextWrapper(ContextType.Domain, domainName);
+			IGroupPrincipalWrapper group = GroupPrincipalWrapper.FindByIdentity(principalContextWrapper.GetPrincipalContext(), groupName);
+			IUserPrincipalWrapper user = UserPrincipalWrapper.FindByIdentity(principalContextWrapper.GetPrincipalContext(), userName.ToLower());
+			isUserInGroup = user.IsMemberOf(group.GetGroupPrincipal());
 
 			return isUserInGroup;
 		}
