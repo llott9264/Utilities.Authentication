@@ -9,8 +9,4 @@ public class GroupPrincipalWrapper(GroupPrincipal groupPrincipal) : IGroupPrinci
     {
         return groupPrincipal;
     }
-    public static IGroupPrincipalWrapper FindByIdentity(PrincipalContext principalContext, string groupName)
-    {
-        return new GroupPrincipalWrapper(GroupPrincipal.FindByIdentity(principalContext, groupName));
-    }
 }

@@ -5,13 +5,8 @@ namespace Utilities.Authentication.Wrappers;
 
 public class UserPrincipalWrapper(UserPrincipal? userPrincipal) : IUserPrincipalWrapper
 {
-    public bool IsMemberOf(GroupPrincipal groupPrincipal)
-    {
-        return userPrincipal != null && userPrincipal.IsMemberOf(groupPrincipal);
-    }
-
-    public static IUserPrincipalWrapper FindByIdentity(PrincipalContext principalContext, string userName)
-    {
-        return new UserPrincipalWrapper(UserPrincipal.FindByIdentity(principalContext, userName));
-    }
+	public bool IsMemberOf(GroupPrincipal groupPrincipal)
+	{
+		return userPrincipal != null && userPrincipal.IsMemberOf(groupPrincipal);
+	}
 }

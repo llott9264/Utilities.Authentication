@@ -5,5 +5,4 @@ namespace Utilities.Authentication.Interfaces;
 public interface IUserPrincipalWrapper
 {
 	bool IsMemberOf(GroupPrincipal groupPrincipal);
-	static abstract IUserPrincipalWrapper FindByIdentity(PrincipalContext principalContext, string userName);
 }

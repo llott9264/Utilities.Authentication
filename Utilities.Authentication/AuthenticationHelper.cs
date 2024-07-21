@@ -1,6 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
+using Utilities.Authentication.Factories;
 using Utilities.Authentication.Interfaces;
-using Utilities.Authentication.Wrappers;
 
 namespace Utilities.Authentication
 {
@@ -8,14 +8,16 @@ namespace Utilities.Authentication
 	{
 		public static bool IsUserInGroup(string domainName, string userName, string groupName)
 		{
-			bool isUserInGroup = false;
+			IPrincipalContextFactory principalContextFactory = new PrincipalContextFactory();
+			IPrincipalContextWrapper principalContextWrapper = principalContextFactory.Create(ContextType.Domain, domainName);
 
-			IPrincipalContextWrapper principalContextWrapper = PrincipalContextWrapper.GetPrincipalContextWrapper(ContextType.Domain, domainName);
-			IGroupPrincipalWrapper group = GroupPrincipalWrapper.FindByIdentity(principalContextWrapper.GetPrincipalContext(), groupName);
-			IUserPrincipalWrapper user = UserPrincipalWrapper.FindByIdentity(principalContextWrapper.GetPrincipalContext(), userName.ToLower());
-			isUserInGroup = user.IsMemberOf(group.GetGroupPrincipal());
+			IGroupPrincipalFactory groupFactory = new GroupPrincipalFactory();
+			IGroupPrincipalWrapper groupPrincipalWrapper = groupFactory.Create(principalContextWrapper.GetPrincipalContext(), groupName);
 
-			return isUserInGroup;
+			IUserPrincipalFactory userFactory = new UserPrincipalFactory();
+			IUserPrincipalWrapper userPrincipalWrapper = userFactory.Create(principalContextWrapper.GetPrincipalContext(), userName.ToLower());
+
+			return userPrincipalWrapper.IsMemberOf(groupPrincipalWrapper.GetGroupPrincipal());
 		}
 	}
 }
