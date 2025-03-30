@@ -42,7 +42,7 @@ public class AuthenticationServiceRegistrationTests
 	}
 
 	[Fact]
-	public void AddApplicationServices_ScopedLifetime_VerifyInstanceWithinScope()
+	public void AddAuthenticationServices_ScopedLifetime_VerifyInstanceWithinScope()
 	{
 		// Arrange
 		ServiceCollection services = new();
@@ -64,7 +64,7 @@ public class AuthenticationServiceRegistrationTests
 	}
 
 	[Fact]
-	public void AddApplicationServices_ScopedLifetime_VerifyInstancesAcrossScopes()
+	public void AddAuthenticationServices_ScopedLifetime_VerifyInstancesAcrossScopes()
 	{
 		// Arrange
 		ServiceCollection services = new();
@@ -102,7 +102,7 @@ public class AuthenticationServiceRegistrationTests
 	}
 
 	[Fact]
-	public void AddApplicationServices_ConfigurationHandler_VerifyMediatorHandlerExists()
+	public void AddAuthenticationServices_GetUserByUsernameQueryHandler_VerifyMediatorHandlerExists()
 	{
 		// Arrange
 		ServiceCollection services = new();
