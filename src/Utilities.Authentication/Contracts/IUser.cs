@@ -2,14 +2,14 @@
 
 public interface IUser
 {
-	string SamAccountName { get; }
-	string FirstName { get; }
-	string MiddleName { get; }
-	string LastName { get; }
-	string EmailAddress { get; }
-	string DisplayName { get; }
-	string TelephoneNumber { get; }
-	bool IsAccountLockedOut { get; }
-	List<string> Groups { get; }
-	bool IsInGroup(string groupName);
+	bool DoesUserExist();
+	string GetSamAccountName();
+	string GetFirstName();
+	string GetLastName();
+	string GetMiddleName();
+	string GetDisplayName();
+	string GetEmailAddress();
+	string GetTelephoneNumber();
+	bool IsAccountLockedOut();
+	List<string> GetGroups();
 }
