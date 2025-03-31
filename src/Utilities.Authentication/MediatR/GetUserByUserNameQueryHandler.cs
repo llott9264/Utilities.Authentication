@@ -12,6 +12,7 @@ public class GetUserByUserNameQueryHandler(IUserFactory userFactory)
 		try
 		{
 			IUser user = userFactory.Create(request.Domain, request.UserName);
+
 			return Task.FromResult(!user.DoesUserExist()
 				? null
 				: (IUserModel)new UserModel
