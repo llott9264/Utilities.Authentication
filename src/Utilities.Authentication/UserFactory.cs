@@ -2,9 +2,9 @@
 
 namespace Utilities.Authentication;
 
-public class ActiveDirectoryFactory : IActiveDirectoryFactory
+internal class UserFactory : IUserFactory
 {
-	public IActiveDirectoryUser CreateUser(string domain, string username)
+	public IUser Create(string domain, string username)
 	{
 		return new ActiveDirectoryUser(domain, username);
 	}

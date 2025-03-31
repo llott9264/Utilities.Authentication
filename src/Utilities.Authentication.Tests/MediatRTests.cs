@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Utilities.Authentication.Contracts;
+using Utilities.Authentication.Exceptions;
 using Utilities.Authentication.MediatR;
 
 namespace Utilities.Authentication.Tests;
@@ -10,33 +11,33 @@ public class MediatRTests
 	public async Task GetUserByUserName_ReturnsExpectedStrings()
 	{
 		//Arrange
-		Mock<IActiveDirectoryUser> mockAdUser = new();
+		Mock<IUser> mockUser = new();
 
-		_ = mockAdUser.Setup(x => x.DoesUserExist()).Returns(true);
-		_ = mockAdUser.Setup(x => x.GetSamAccountName()).Returns("jdoe");
-		_ = mockAdUser.Setup(x => x.GetFirstName()).Returns("John");
-		_ = mockAdUser.Setup(x => x.GetMiddleName()).Returns("W");
-		_ = mockAdUser.Setup(x => x.GetLastName()).Returns("Doe");
-		_ = mockAdUser.Setup(x => x.GetDisplayName()).Returns("John Doe");
-		_ = mockAdUser.Setup(x => x.GetEmailAddress()).Returns("jdoe@email.com");
-		_ = mockAdUser.Setup(x => x.GetTelephoneNumber()).Returns("5551234");
-		_ = mockAdUser.Setup(x => x.IsAccountLockedOut()).Returns(false);
-		_ = mockAdUser.Setup(x => x.GetGroups()).Returns(
+		_ = mockUser.Setup(x => x.DoesUserExist()).Returns(true);
+		_ = mockUser.Setup(x => x.GetSamAccountName()).Returns("jdoe");
+		_ = mockUser.Setup(x => x.GetFirstName()).Returns("John");
+		_ = mockUser.Setup(x => x.GetMiddleName()).Returns("W");
+		_ = mockUser.Setup(x => x.GetLastName()).Returns("Doe");
+		_ = mockUser.Setup(x => x.GetDisplayName()).Returns("John Doe");
+		_ = mockUser.Setup(x => x.GetEmailAddress()).Returns("jdoe@email.com");
+		_ = mockUser.Setup(x => x.GetTelephoneNumber()).Returns("5551234");
+		_ = mockUser.Setup(x => x.IsAccountLockedOut()).Returns(false);
+		_ = mockUser.Setup(x => x.GetGroups()).Returns(
 		[
 			"Readers",
 			"Writers",
 			"Admin"
 		]);
 
-		Mock<IActiveDirectoryFactory> mockFactory = new();
-		_ = mockFactory.Setup(x => x.CreateUser(It.IsAny<string>(), It.IsAny<string>()))
-			.Returns(mockAdUser.Object);
+		Mock<IUserFactory> mockFactory = new();
+		_ = mockFactory.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<string>()))
+			.Returns(mockUser.Object);
 
 		GetUserByUserNameQuery request = new("swe", "jdoe");
 		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUser? result = await handler.Handle(request, CancellationToken.None);
+		IUserModel? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.NotNull(result);
@@ -56,17 +57,17 @@ public class MediatRTests
 	public async Task GetUserByUserName_UserNotFound_ReturnsNull()
 	{
 		//Arrange
-		Mock<IActiveDirectoryUser> mockAdUser = new();
-		_ = mockAdUser.Setup(x => x.DoesUserExist()).Returns(false);
+		Mock<IUser> mockUser = new();
+		_ = mockUser.Setup(x => x.DoesUserExist()).Returns(false);
 
-		Mock<IActiveDirectoryFactory> mockFactory = new();
-		_ = mockFactory.Setup(x => x.CreateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(mockAdUser.Object);
+		Mock<IUserFactory> mockFactory = new();
+		_ = mockFactory.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<string>())).Returns(mockUser.Object);
 
 		GetUserByUserNameQuery request = new("swe", "jdoe");
 		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUser? result = await handler.Handle(request, CancellationToken.None);
+		IUserModel? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.Null(result);
@@ -76,11 +77,16 @@ public class MediatRTests
 	public async Task GetUserByUserName_DomainNotFound_ReturnsNull()
 	{
 		//Arrange
+		Mock<IUserFactory> mockFactory = new();
+		_ = mockFactory.Setup(x => x.Create(It.IsAny<string>(), It.IsAny<string>()))
+			.Throws(new DomainNotFoundException("bob"));
+
+
 		GetUserByUserNameQuery request = new("bob", "jdoe");
-		GetUserByUserNameQueryHandler handler = new(new ActiveDirectoryFactory());
+		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUser? result = await handler.Handle(request, CancellationToken.None);
+		IUserModel? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.Null(result);
