@@ -4,14 +4,14 @@ using Utilities.Authentication.Exceptions;
 
 namespace Utilities.Authentication.MediatR;
 
-public class GetUserByUserNameQueryHandler(IUserFactory activeDirectoryFactory)
+public class GetUserByUserNameQueryHandler(IUserFactory userFactory)
 	: IRequestHandler<GetUserByUserNameQuery, IUserModel?>
 {
 	public Task<IUserModel?> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
 	{
 		try
 		{
-			IUser user = activeDirectoryFactory.Create(request.Domain, request.UserName);
+			IUser user = userFactory.Create(request.Domain, request.UserName);
 			return Task.FromResult(!user.DoesUserExist()
 				? null
 				: (IUserModel)new UserModel
