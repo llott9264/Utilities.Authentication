@@ -18,14 +18,14 @@ public class AuthenticationServiceRegistrationTests
 		ServiceProvider serviceProvider = services.BuildServiceProvider();
 
 		IMediator? mediator = serviceProvider.GetService<IMediator>();
-		IActiveDirectoryFactory? adFactory = serviceProvider.GetService<IActiveDirectoryFactory>();
+		IUserFactory? userFactory = serviceProvider.GetService<IUserFactory>();
 
 		// Assert
 		Assert.NotNull(mediator);
 		_ = Assert.IsType<Mediator>(mediator);
 
-		Assert.NotNull(adFactory);
-		_ = Assert.IsType<ActiveDirectoryFactory>(adFactory);
+		Assert.NotNull(userFactory);
+		_ = Assert.IsType<UserFactory>(userFactory);
 	}
 
 	[Fact]
@@ -56,8 +56,8 @@ public class AuthenticationServiceRegistrationTests
 		IMediator? service1 = scope.ServiceProvider.GetService<IMediator>();
 		IMediator? service2 = scope.ServiceProvider.GetService<IMediator>();
 
-		IActiveDirectoryFactory? service3 = scope.ServiceProvider.GetService<IActiveDirectoryFactory>();
-		IActiveDirectoryFactory? service4 = scope.ServiceProvider.GetService<IActiveDirectoryFactory>();
+		IUserFactory? service3 = scope.ServiceProvider.GetService<IUserFactory?>();
+		IUserFactory? service4 = scope.ServiceProvider.GetService<IUserFactory?>();
 
 		Assert.NotSame(service1, service2);
 		Assert.Same(service3, service4);
@@ -75,7 +75,7 @@ public class AuthenticationServiceRegistrationTests
 
 		// Assert
 		IMediator? service1, service2;
-		IActiveDirectoryFactory? service3, service4;
+		IUserFactory? service3, service4;
 
 		using (IServiceScope scope1 = serviceProvider.CreateScope())
 		{
@@ -89,12 +89,12 @@ public class AuthenticationServiceRegistrationTests
 
 		using (IServiceScope scope1 = serviceProvider.CreateScope())
 		{
-			service3 = scope1.ServiceProvider.GetService<IActiveDirectoryFactory>();
+			service3 = scope1.ServiceProvider.GetService<IUserFactory>();
 		}
 
 		using (IServiceScope scope2 = serviceProvider.CreateScope())
 		{
-			service4 = scope2.ServiceProvider.GetService<IActiveDirectoryFactory>();
+			service4 = scope2.ServiceProvider.GetService<IUserFactory>();
 		}
 
 		Assert.NotSame(service1, service2);
@@ -113,7 +113,7 @@ public class AuthenticationServiceRegistrationTests
 
 		// Assert
 		ServiceDescriptor? handlerDescriptor = serviceDescriptors.FirstOrDefault(sd =>
-			sd.ServiceType == typeof(IRequestHandler<GetUserByUserNameQuery, IUser?>));
+			sd.ServiceType == typeof(IRequestHandler<GetUserByUserNameQuery, IUserModel?>));
 
 		Assert.NotNull(handlerDescriptor);
 		Assert.Equal(ServiceLifetime.Transient, handlerDescriptor.Lifetime);

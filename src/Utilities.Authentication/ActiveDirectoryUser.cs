@@ -4,7 +4,7 @@ using Utilities.Authentication.Exceptions;
 
 namespace Utilities.Authentication;
 
-public class ActiveDirectoryUser : IActiveDirectoryUser
+internal class ActiveDirectoryUser : IUser
 {
 	private readonly UserPrincipal? _userPrincipal;
 
