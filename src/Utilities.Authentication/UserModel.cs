@@ -1,11 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using Utilities.Authentication.Contracts;
-
-[assembly: InternalsVisibleTo("Utilities.Authentication.Tests")]
+﻿using Utilities.Authentication.Contracts;
 
 namespace Utilities.Authentication;
 
-internal class User : IUser
+internal class UserModel : IUserModel
 {
 	public string SamAccountName { get; set; } = string.Empty;
 	public string FirstName { get; set; } = string.Empty;
