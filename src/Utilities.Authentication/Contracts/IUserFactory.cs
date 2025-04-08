@@ -2,5 +2,5 @@
 
 public interface IUserFactory
 {
-	public IUser Create(string domain, string username);
+	public IDirectoryServiceUser Create(string domain, string username);
 }

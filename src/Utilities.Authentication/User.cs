@@ -2,9 +2,9 @@
 
 namespace Utilities.Authentication;
 
-internal class UserModel : IUserModel
+internal class User : IUser
 {
-	public string SamAccountName { get; set; } = string.Empty;
+	public string UserName { get; set; } = string.Empty;
 	public string FirstName { get; set; } = string.Empty;
 	public string MiddleName { get; set; } = string.Empty;
 	public string LastName { get; set; } = string.Empty;
