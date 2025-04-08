@@ -113,7 +113,7 @@ public class AuthenticationServiceRegistrationTests
 
 		// Assert
 		ServiceDescriptor? handlerDescriptor = serviceDescriptors.FirstOrDefault(sd =>
-			sd.ServiceType == typeof(IRequestHandler<GetUserByUserNameQuery, IUserModel?>));
+			sd.ServiceType == typeof(IRequestHandler<GetUserByUserNameQuery, IUser?>));
 
 		Assert.NotNull(handlerDescriptor);
 		Assert.Equal(ServiceLifetime.Transient, handlerDescriptor.Lifetime);

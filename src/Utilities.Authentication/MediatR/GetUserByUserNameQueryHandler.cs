@@ -5,31 +5,32 @@ using Utilities.Authentication.Exceptions;
 namespace Utilities.Authentication.MediatR;
 
 public class GetUserByUserNameQueryHandler(IUserFactory userFactory)
-	: IRequestHandler<GetUserByUserNameQuery, IUserModel?>
+	: IRequestHandler<GetUserByUserNameQuery, IUser?>
 {
-	public Task<IUserModel?> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
+	public Task<IUser?> Handle(GetUserByUserNameQuery request, CancellationToken cancellationToken)
 	{
 		try
 		{
-			IUser user = userFactory.Create(request.Domain, request.UserName);
+			IDirectoryServiceUser user = userFactory.Create(request.Domain, request.UserName);
 
 			return Task.FromResult(!user.DoesUserExist()
 				? null
-				: (IUserModel)new UserModel
+				: (IUser)new User
 				{
-					SamAccountName = user.GetSamAccountName(),
+					UserName = user.GetUserName(),
 					FirstName = user.GetFirstName(),
 					MiddleName = user.GetMiddleName(),
 					LastName = user.GetLastName(),
 					DisplayName = user.GetDisplayName(),
 					EmailAddress = user.GetEmailAddress(),
 					TelephoneNumber = user.GetTelephoneNumber(),
-					Groups = user.GetGroups()
+					Groups = user.GetGroups(),
+					IsAccountLockedOut = user.IsAccountLockedOut()
 				});
 		}
 		catch (DomainNotFoundException)
 		{
-			return Task.FromResult<IUserModel?>(null);
+			return Task.FromResult<IUser?>(null);
 		}
 	}
 }

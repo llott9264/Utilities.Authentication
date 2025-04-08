@@ -4,7 +4,7 @@ using Utilities.Authentication.Exceptions;
 
 namespace Utilities.Authentication;
 
-internal class ActiveDirectoryUser : IUser
+internal class ActiveDirectoryUser : IDirectoryServiceUser
 {
 	private readonly UserPrincipal? _userPrincipal;
 
@@ -26,7 +26,7 @@ internal class ActiveDirectoryUser : IUser
 		return _userPrincipal != null;
 	}
 
-	public string GetSamAccountName()
+	public string GetUserName()
 	{
 		return _userPrincipal?.SamAccountName ?? string.Empty;
 	}

@@ -11,10 +11,10 @@ public class MediatRTests
 	public async Task GetUserByUserName_ReturnsExpectedStrings()
 	{
 		//Arrange
-		Mock<IUser> mockUser = new();
+		Mock<IDirectoryServiceUser> mockUser = new();
 
 		_ = mockUser.Setup(x => x.DoesUserExist()).Returns(true);
-		_ = mockUser.Setup(x => x.GetSamAccountName()).Returns("jdoe");
+		_ = mockUser.Setup(x => x.GetUserName()).Returns("jdoe");
 		_ = mockUser.Setup(x => x.GetFirstName()).Returns("John");
 		_ = mockUser.Setup(x => x.GetMiddleName()).Returns("W");
 		_ = mockUser.Setup(x => x.GetLastName()).Returns("Doe");
@@ -37,11 +37,11 @@ public class MediatRTests
 		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUserModel? result = await handler.Handle(request, CancellationToken.None);
+		IUser? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.NotNull(result);
-		Assert.Equal("jdoe", result.SamAccountName);
+		Assert.Equal("jdoe", result.UserName);
 		Assert.Equal("John", result.FirstName);
 		Assert.Equal("W", result.MiddleName);
 		Assert.Equal("Doe", result.LastName);
@@ -57,7 +57,7 @@ public class MediatRTests
 	public async Task GetUserByUserName_UserNotFound_ReturnsNull()
 	{
 		//Arrange
-		Mock<IUser> mockUser = new();
+		Mock<IDirectoryServiceUser> mockUser = new();
 		_ = mockUser.Setup(x => x.DoesUserExist()).Returns(false);
 
 		Mock<IUserFactory> mockFactory = new();
@@ -67,7 +67,7 @@ public class MediatRTests
 		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUserModel? result = await handler.Handle(request, CancellationToken.None);
+		IUser? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.Null(result);
@@ -86,7 +86,7 @@ public class MediatRTests
 		GetUserByUserNameQueryHandler handler = new(mockFactory.Object);
 
 		//Act
-		IUserModel? result = await handler.Handle(request, CancellationToken.None);
+		IUser? result = await handler.Handle(request, CancellationToken.None);
 
 		//Assert
 		Assert.Null(result);
